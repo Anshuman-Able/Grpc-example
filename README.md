@@ -1,10 +1,29 @@
-# 🚀 PumpFun Token Stream
+# 🚀 Yellowstone gRPC - Multi-Address Subscription Issue Demo
 
-Real-time streaming service for monitoring newly minted tokens on **PumpFun** using Yellowstone gRPC (Triton).
+This repository demonstrates a **data loss/backpressure issue** when subscribing to multiple addresses using Yellowstone gRPC.
+
+## ⚠️ The Problem
+
+When using Yellowstone gRPC's `SubscribeRequest` with **multiple addresses** in the `accountInclude` filter, transactions start getting **dropped or missed** — likely due to high throughput or backpressure handling issues.
+
+### ✅ Works Fine (Single Address)
+```typescript
+accountInclude: [PUMPFUN_MINT_AUTHORITY.toBase58()]
+```
+
+### ❌ Data Loss Occurs (Multiple Addresses)
+```typescript
+accountInclude: [PUMPFUN_MINT_AUTHORITY.toBase58(), TOKEN_PROGRAM_ID.toBase58()]
+```
+
+When adding more than one monitoring address, the stream experiences:
+- **Missing transactions** - Not all transactions are received
+- **Data gaps** - Intermittent data loss during high activity periods
+- **Potential backpressure** - The client may not be consuming data fast enough
 
 ## Overview
 
-This TypeScript application streams and decodes PumpFun token creation transactions in real-time from the Solana blockchain. It uses Yellowstone gRPC to subscribe to transactions involving the PumpFun mint authority and provides parsed, human-readable output for each new token creation.
+This TypeScript application streams and decodes PumpFun token creation transactions in real-time from the Solana blockchain using Yellowstone gRPC. It serves as a minimal reproduction case for the multi-address subscription issue.
 
 ## Features
 

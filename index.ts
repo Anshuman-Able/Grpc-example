@@ -3,10 +3,9 @@ import Client, {
   CommitmentLevel,
   SubscribeRequest,
 } from "@triton-one/yellowstone-grpc";
-import { SubscribeRequestPing } from "@triton-one/yellowstone-grpc/dist/types/grpc/geyser";
 import { TransactionFormatter } from "./utils/transaction-formatter";
 import { parseSwapTransactionOutput } from "./utils/pumpfun_formatted_txn";
-import { PUMP_FUN_PROGRAM_ID, PUMPFUN_MINT_AUTHORITY } from "./utils/type";
+import {  PUMPFUN_MINT_AUTHORITY, TOKEN_PROGRAM_ID } from "./utils/type";
 import { PumpFunDecoder } from "./utils/decode-parser";
 
 const originalConsoleWarn = console.warn;
@@ -128,7 +127,8 @@ const req: SubscribeRequest = {
       vote: false,
       failed: false,
       signature: undefined,
-      accountInclude: [PUMPFUN_MINT_AUTHORITY.toBase58()],
+      accountInclude: [PUMPFUN_MINT_AUTHORITY.toBase58()], // Works fine
+      // accountInclude: [PUMPFUN_MINT_AUTHORITY.toBase58(),TOKEN_PROGRAM_ID.toBase58()], // Data Loss starts when add a more address
       accountExclude: [],
       accountRequired: [],
     },
